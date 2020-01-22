@@ -40,6 +40,9 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     private JobFactory jobFactory;
 
+    @Autowired
+    private InstanceId instanceId;
+
     private SocketAddress remoteAddress;
     private BlockTemplate blockTemplate;
     private Miner miner;
@@ -73,7 +76,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         blockTemplate = blockTemplateNotifier.getLastBlockTemplate();
 
         jobFactory.setBlockTemplate(blockTemplate);
-        lastJob = jobFactory.getJob();
+        lastJob = jobFactory.getJob(miner);
 
         reply(ctx, request.getId(), Map.of(
                 "id", miner.getId().toString(),
@@ -93,7 +96,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         blockTemplate = blockTemplateNotifier.getLastBlockTemplate();
 
         jobFactory.setBlockTemplate(blockTemplate);
-        lastJob = jobFactory.getJob();
+        lastJob = jobFactory.getJob(miner);
 
         sendNotification(ctx, "job", Map.of(
                 "blob", HexUtils.byteArrayToHexString(lastJob.getBlob()),
@@ -106,7 +109,8 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void onSubmit(ChannelHandlerContext ctx, StratumRequest request) {
-        log.info("{}", request);
+        // TODO: Validate job ID
+
         final byte[] nonce = HexUtils.hexStringToByteArray((String) request.getParams().get("nonce"));
         final byte[] result = HexUtils.hexStringToByteArray((String) request.getParams().get("result"));
 
@@ -116,13 +120,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
             replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
         }
 
-        // TODO: Extract this elsewhere.
-        final byte[] blockBlob = lastJob.getTemplate().getTemplateBlob().clone();
-        // TODO: Use System.arrayCopy.
-        blockBlob[39] = nonce[0];
-        blockBlob[40] = nonce[1];
-        blockBlob[41] = nonce[2];
-        blockBlob[42] = nonce[3];
+        final byte[] templateBlob = lastJob.getTemplate().withExtra(instanceId, miner.getId(), nonce);
 
         // TODO: Validate result hash.
 
@@ -133,7 +131,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
             // TODO: Use executor.
             new Thread(() -> {
                 try {
-                    daemon.submitBlock(blockBlob);
+                    daemon.submitBlock(templateBlob);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

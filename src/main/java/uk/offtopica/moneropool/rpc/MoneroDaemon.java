@@ -34,7 +34,6 @@ public class MoneroDaemon {
                     // TODO: Use ObjectMapper instead of untyped Map.
                     final Map<String, Object> result = (Map<String, Object>) response.get("result");
                     BlockTemplate blockTemplate = new BlockTemplate();
-                    blockTemplate.setHashingBlob(hexStringToByteArray((String) result.get("blockhashing_blob")));
                     blockTemplate.setTemplateBlob(hexStringToByteArray((String) result.get("blocktemplate_blob")));
                     // TODO: Wide difficulty.
                     blockTemplate.setDifficulty(new Difficulty(Long.valueOf((Integer) result.get("difficulty"))));
