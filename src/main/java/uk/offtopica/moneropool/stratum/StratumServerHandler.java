@@ -56,7 +56,10 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         final String agent;
         if (params.containsKey("agent")) {
             agent = (String) params.get("agent");
-            // TODO: Check for xmr-node-proxy (tell them to go away).
+            if (agent.startsWith("xmr-node-proxy")) {
+                replyWithError(ctx, request.getId(), new StratumError(-1, "xmr-node-proxy is not supported"));
+                return;
+            }
         } else {
             agent = null;
         }
