@@ -27,7 +27,6 @@ public class BlockTemplateNotifier {
     @Value("${blocktemplate.address}")
     private String walletAddress;
 
-    // TODO: This should probably be an atomic reference.
     @Getter
     private BlockTemplate lastBlockTemplate;
 

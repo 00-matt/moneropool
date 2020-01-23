@@ -8,10 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import uk.offtopica.moneropool.stratum.StratumServer;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -20,13 +17,15 @@ public class MoneroPoolApplication {
         final ConfigurableApplicationContext context =
                 new AnnotationConfigApplicationContext("uk.offtopica.moneropool");
 
-        // TODO: Don't poll.
+        // Get an initial block template.
         final BlockTemplateNotifier blockTemplateNotifier = context.getBean(BlockTemplateNotifier.class);
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleWithFixedDelay(blockTemplateNotifier::update, 0, 5, TimeUnit.SECONDS);
+        blockTemplateNotifier.update();
 
-        final StratumServer stratum = context.getBean(StratumServer.class);
-        final ChannelFuture f = stratum.start().sync();
+        final NotifyServer notifyServer = context.getBean(NotifyServer.class);
+        notifyServer.start();
+
+        final StratumServer stratumServer = context.getBean(StratumServer.class);
+        final ChannelFuture f = stratumServer.start().sync();
         f.channel().closeFuture().sync();
         context.close();
     }
