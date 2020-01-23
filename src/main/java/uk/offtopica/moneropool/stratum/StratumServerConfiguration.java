@@ -1,8 +1,5 @@
 package uk.offtopica.moneropool.stratum;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.offtopica.moneropool.stratum.message.StratumMessage;
 import uk.offtopica.moneropool.stratum.message.StratumMessageDeserializer;
 
 @Configuration
@@ -28,16 +24,6 @@ public class StratumServerConfiguration {
     @Bean
     StratumMessageDeserializer stratumMessageDeserializer() {
         return new StratumMessageDeserializer();
-    }
-
-    @Bean
-    ObjectMapper objectMapper(StratumMessageDeserializer stratumMessageDeserializer) {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final SimpleModule module = new SimpleModule();
-        module.addDeserializer(StratumMessage.class, stratumMessageDeserializer);
-        objectMapper.registerModule(module);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
     }
 
     @Bean
