@@ -12,13 +12,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import uk.offtopica.moneropool.*;
-import uk.offtopica.moneropool.rpc.MoneroDaemon;
 import uk.offtopica.moneropool.stratum.message.StratumError;
 import uk.offtopica.moneropool.stratum.message.StratumRequest;
 import uk.offtopica.moneropool.stratum.message.StratumResponse;
 import uk.offtopica.moneropool.util.HexUtils;
 
-import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,9 +25,6 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StratumServerHandler extends ChannelInboundHandlerAdapter {
-    @Autowired
-    private MoneroDaemon daemon;
-
     @Autowired
     @Qualifier("minerChannelGroup")
     private ChannelGroup minerChannelGroup;
@@ -41,7 +36,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     private JobFactory jobFactory;
 
     @Autowired
-    private InstanceId instanceId;
+    private ShareProcessor shareProcessor;
 
     private SocketAddress remoteAddress;
     private BlockTemplate blockTemplate;
@@ -114,31 +109,14 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         final byte[] nonce = HexUtils.hexStringToByteArray((String) request.getParams().get("nonce"));
         final byte[] result = HexUtils.hexStringToByteArray((String) request.getParams().get("result"));
 
-        final Difficulty shareDifficulty = Difficulty.ofShare(result);
-
-        if (shareDifficulty.compareTo(lastJob.getDifficulty()) < 0) {
-            replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
+        switch (shareProcessor.process(miner, lastJob, nonce, result)) {
+            case LOW_DIFFICULTY:
+                replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
+                break;
+            case VALID:
+                reply(ctx, request.getId(), Map.of("status", "OK"));
+                break;
         }
-
-        final byte[] templateBlob = lastJob.getTemplate().withExtra(instanceId, miner.getId(), nonce);
-
-        // TODO: Validate result hash.
-
-        if (shareDifficulty.compareTo(lastJob.getTemplate().getDifficulty()) >= 0) {
-            log.info("omg a block");
-
-            // TODO: Extract elsewhere.
-            // TODO: Use executor.
-            new Thread(() -> {
-                try {
-                    daemon.submitBlock(templateBlob);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-        }
-
-        reply(ctx, request.getId(), Map.of("status", "OK"));
     }
 
     private void onUnknownRequest(ChannelHandlerContext ctx, StratumRequest request) {
