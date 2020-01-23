@@ -1,5 +1,6 @@
 package uk.offtopica.moneropool.stratum;
 
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.offtopica.moneropool.stratum.message.StratumMessage;
 import uk.offtopica.moneropool.stratum.message.StratumMessageDeserializer;
 
 @Configuration
@@ -22,8 +24,10 @@ public class StratumServerConfiguration {
     private StratumChannelInitializer stratumChannelInitializer;
 
     @Bean
-    StratumMessageDeserializer stratumMessageDeserializer() {
-        return new StratumMessageDeserializer();
+    SimpleModule stratumJacksonModule() {
+        final SimpleModule module = new SimpleModule();
+        module.addDeserializer(StratumMessage.class, new StratumMessageDeserializer());
+        return module;
     }
 
     @Bean
