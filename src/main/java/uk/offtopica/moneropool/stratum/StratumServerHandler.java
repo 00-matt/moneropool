@@ -18,6 +18,7 @@ import uk.offtopica.moneropool.stratum.message.StratumResponse;
 import uk.offtopica.moneropool.util.HexUtils;
 
 import java.net.SocketAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -82,8 +83,10 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
                         "target", lastJob.getDifficulty().getHex(),
                         "id", miner.getId().toString(),
                         "seed_hash", HexUtils.byteArrayToHexString(lastJob.getSeedHash()),
-                        "height", lastJob.getHeight().toString()
-                )
+                        "height", lastJob.getHeight().toString(),
+                        "algo", "rx/0"
+                ),
+                "extensions", List.of("algo")
         ));
     }
 
@@ -99,7 +102,8 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
                 "target", lastJob.getDifficulty().getHex(),
                 "id", miner.getId().toString(),
                 "seed_hash", HexUtils.byteArrayToHexString(lastJob.getSeedHash()),
-                "height", lastJob.getHeight().toString()
+                "height", lastJob.getHeight().toString(),
+                "algo", "rx/0"
         ));
     }
 
