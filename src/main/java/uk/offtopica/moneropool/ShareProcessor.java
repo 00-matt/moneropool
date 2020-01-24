@@ -20,6 +20,7 @@ public class ShareProcessor {
         final Difficulty shareDifficulty = Difficulty.ofShare(result);
 
         if (shareDifficulty.compareTo(job.getDifficulty()) < 0) {
+            miner.addInvalidShare();
             return ShareStatus.LOW_DIFFICULTY;
         }
 
@@ -35,6 +36,8 @@ public class ShareProcessor {
                 log.error("Failed to submit block", e);
             }
         }
+
+        miner.addValidShare(job.getDifficulty());
 
         return ShareStatus.VALID;
     }
