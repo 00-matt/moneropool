@@ -12,10 +12,10 @@ public class Miner {
     private String password;
     private String agent;
     private Long id;
-    private LocalDate connectedAt;
-    private BigInteger hashesSubmitted;
-    private Long validSharesSubmitted;
-    private Long invalidSharesSubmitted;
+    private LocalDate connectedAt = LocalDate.now();
+    private BigInteger hashesSubmitted = BigInteger.ZERO;
+    private Long validSharesSubmitted = 0L;
+    private Long invalidSharesSubmitted = 0L;
 
     public void addInvalidShare() {
         invalidSharesSubmitted++;
