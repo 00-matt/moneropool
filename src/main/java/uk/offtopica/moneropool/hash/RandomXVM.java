@@ -12,7 +12,8 @@ class RandomXVM {
     @Getter
     private final byte[] key;
     private Pointer dataset;
-    private Pointer vm;
+    private VmPool vmPool;
+    @Getter
     private boolean ready;
 
     public RandomXVM(int flags, byte[] key) {
@@ -20,7 +21,6 @@ class RandomXVM {
         this.key = key;
         ready = false;
         dataset = Pointer.NULL;
-        vm = Pointer.NULL;
         initDataset();
         initVm();
     }
@@ -30,7 +30,12 @@ class RandomXVM {
             throw new IllegalStateException("Not ready");
         }
 
-        return RandomX.calculateHash(vm, data);
+        Pointer vm = vmPool.get();
+        try {
+            return RandomX.calculateHash(vm, data);
+        } finally {
+            vmPool.release(vm);
+        }
     }
 
     private void initDataset() {
@@ -80,15 +85,12 @@ class RandomXVM {
     }
 
     private void initVm() {
-        vm = RandomX.createVm(flags, Pointer.NULL, dataset);
+        vmPool = new VmPool(flags, 8, dataset);
         ready = true;
     }
 
     public void destroy() {
-        if (!vm.equals(Pointer.NULL)) {
-            RandomX.destroyVm(vm);
-            vm = Pointer.NULL;
-        }
+        vmPool.shutdown();
 
         if (!dataset.equals(Pointer.NULL)) {
             RandomX.releaseDataset(dataset);

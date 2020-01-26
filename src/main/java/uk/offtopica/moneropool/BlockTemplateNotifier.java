@@ -45,7 +45,7 @@ public class BlockTemplateNotifier {
             BlockTemplate candidate = moneroDaemon.getBlockTemplate(walletAddress, RESERVE_SIZE).get();
             if (lastBlockTemplate == null || !Arrays.equals(lastBlockTemplate.getPrevHash(), candidate.getPrevHash())) {
                 lastBlockTemplate = candidate;
-                globalExecutor.submit(() -> resultHashValidator.onBlockTemplate(lastBlockTemplate));
+                globalExecutor.execute(() -> resultHashValidator.onBlockTemplate(lastBlockTemplate));
                 final NewBlockTemplateEvent event = new NewBlockTemplateEvent();
                 for (Channel c : minerChannelGroup) {
                     c.pipeline().fireUserEventTriggered(event);
