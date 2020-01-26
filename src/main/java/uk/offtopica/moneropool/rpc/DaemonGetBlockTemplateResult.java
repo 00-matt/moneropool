@@ -2,11 +2,13 @@ package uk.offtopica.moneropool.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import uk.offtopica.moneropool.BlockTemplate;
 import uk.offtopica.moneropool.Difficulty;
 import uk.offtopica.moneropool.util.HexUtils;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class DaemonGetBlockTemplateResult extends RpcResult {
     @JsonProperty("blocktemplate_blob")
     private String blockTemplateBlob;
