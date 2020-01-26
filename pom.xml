@@ -95,6 +95,11 @@
             <artifactId>netty-transport</artifactId>
         </dependency>
         <dependency>
+            <groupId>uk.offtopica</groupId>
+            <artifactId>randomx4j</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>

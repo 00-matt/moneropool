@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import uk.offtopica.moneropool.hash.ResultHashValidator;
 import uk.offtopica.moneropool.rpc.MoneroDaemon;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
 
 @Component
 @Slf4j
@@ -24,11 +26,18 @@ public class BlockTemplateNotifier {
     @Qualifier("minerChannelGroup")
     private ChannelGroup minerChannelGroup;
 
+    @Autowired
+    private ResultHashValidator resultHashValidator;
+
     @Value("${blocktemplate.address}")
     private String walletAddress;
 
     @Getter
     private BlockTemplate lastBlockTemplate;
+
+    @Autowired
+    @Qualifier("globalExecutor")
+    private ExecutorService globalExecutor;
 
     public void update() {
         log.trace("Updating block template");
@@ -36,6 +45,7 @@ public class BlockTemplateNotifier {
             BlockTemplate candidate = moneroDaemon.getBlockTemplate(walletAddress, RESERVE_SIZE).get();
             if (lastBlockTemplate == null || !Arrays.equals(lastBlockTemplate.getPrevHash(), candidate.getPrevHash())) {
                 lastBlockTemplate = candidate;
+                globalExecutor.submit(() -> resultHashValidator.onBlockTemplate(lastBlockTemplate));
                 final NewBlockTemplateEvent event = new NewBlockTemplateEvent();
                 for (Channel c : minerChannelGroup) {
                     c.pipeline().fireUserEventTriggered(event);

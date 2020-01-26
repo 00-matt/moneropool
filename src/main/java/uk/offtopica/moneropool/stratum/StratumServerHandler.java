@@ -113,14 +113,23 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         final byte[] nonce = HexUtils.hexStringToByteArray((String) request.getParams().get("nonce"));
         final byte[] result = HexUtils.hexStringToByteArray((String) request.getParams().get("result"));
 
-        switch (shareProcessor.process(miner, lastJob, nonce, result)) {
-            case LOW_DIFFICULTY:
-                replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
-                break;
-            case VALID:
-                reply(ctx, request.getId(), Map.of("status", "OK"));
-                break;
-        }
+        shareProcessor.process(miner, lastJob, nonce, result).thenAccept(status -> {
+            switch (status) {
+                case BAD_HASH:
+                    replyWithError(ctx, request.getId(), new StratumError(-1, "Bad hash"));
+                    break;
+                case LOW_DIFFICULTY:
+                    replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
+                    break;
+                case VALID:
+                    reply(ctx, request.getId(), Map.of("status", "OK"));
+                    break;
+            }
+        }).exceptionally(throwable -> {
+            log.error("Unable to process share", throwable);
+            replyWithError(ctx, request.getId(), new StratumError(-1, "Internal error"));
+            return null;
+        });
     }
 
     private void onUnknownRequest(ChannelHandlerContext ctx, StratumRequest request) {

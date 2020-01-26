@@ -1,6 +1,7 @@
 package uk.offtopica.moneropool;
 
 import io.netty.channel.ChannelFuture;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import uk.offtopica.moneropool.stratum.StratumServer;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Configuration
@@ -33,5 +36,10 @@ public class MoneroPoolApplication {
     @Bean
     InstanceId instanceId() {
         return new InstanceId(ThreadLocalRandom.current().nextLong());
+    }
+
+    @Bean
+    ExecutorService globalExecutor(@Value("${globalExecutor.threads}") int threads) {
+        return Executors.newFixedThreadPool(threads);
     }
 }

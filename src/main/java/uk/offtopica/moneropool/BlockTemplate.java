@@ -14,9 +14,14 @@ public class BlockTemplate {
     private Integer reservedOffset;
     private Long seedHeight;
     private byte[] seedHash;
+    private byte[] nextSeedHash;
 
     public byte[] getHashingBlob(InstanceId instanceId, Long minerId) {
         return NativeUtils.getHashingBlob(withExtra(instanceId, minerId, new byte[]{}));
+    }
+
+    public byte[] getHashingBlob(InstanceId instanceId, Long minerId, byte[] nonce) {
+        return NativeUtils.getHashingBlob(withExtra(instanceId, minerId, nonce));
     }
 
     public byte[] withExtra(InstanceId instanceId, Long minerId, byte[] nonce) {

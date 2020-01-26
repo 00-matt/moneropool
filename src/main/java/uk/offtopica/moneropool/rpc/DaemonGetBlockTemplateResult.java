@@ -31,6 +31,9 @@ public class DaemonGetBlockTemplateResult extends RpcResult {
     @JsonProperty("seed_hash")
     private String seedHash;
 
+    @JsonProperty("next_seed_hash")
+    private String nextSeedHash;
+
     public BlockTemplate asBlockTemplate() {
         BlockTemplate blockTemplate = new BlockTemplate();
 
@@ -42,6 +45,12 @@ public class DaemonGetBlockTemplateResult extends RpcResult {
         blockTemplate.setReservedOffset(reservedOffset);
         blockTemplate.setSeedHeight(seedHeight);
         blockTemplate.setSeedHash(HexUtils.hexStringToByteArray(seedHash));
+
+        if (nextSeedHash == null || nextSeedHash.length() == 0) {
+            blockTemplate.setNextSeedHash(null);
+        } else {
+            blockTemplate.setNextSeedHash(HexUtils.hexStringToByteArray(nextSeedHash));
+        }
 
         return blockTemplate;
     }
