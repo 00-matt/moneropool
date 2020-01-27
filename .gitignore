@@ -2,3 +2,4 @@ target/
 *.so
 *.class
 core
+dependency-reduced-pom.xml
