@@ -3,8 +3,8 @@ package uk.offtopica.moneropool;
 import lombok.Data;
 
 import java.math.BigInteger;
-import java.time.Duration;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Data
 public class Miner {
@@ -12,7 +12,7 @@ public class Miner {
     private String password;
     private String agent;
     private Long id;
-    private LocalDate connectedAt = LocalDate.now();
+    private Instant connectedAt = Instant.now();
     private BigInteger hashesSubmitted = BigInteger.ZERO;
     private Long validSharesSubmitted = 0L;
     private Long invalidSharesSubmitted = 0L;
@@ -26,7 +26,7 @@ public class Miner {
         hashesSubmitted = hashesSubmitted.add(difficulty.getDifficulty());
     }
 
-    public Duration getConnectionPeriod() {
-        return Duration.between(connectedAt, LocalDate.now());
+    public long getConnectionPeriod() {
+        return ChronoUnit.SECONDS.between(connectedAt, Instant.now());
     }
 }
