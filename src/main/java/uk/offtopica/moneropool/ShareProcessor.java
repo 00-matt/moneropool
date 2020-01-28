@@ -29,6 +29,11 @@ public class ShareProcessor {
             return CompletableFuture.completedFuture(ShareStatus.LOW_DIFFICULTY);
         }
 
+        if (!job.getResults().add(result)) {
+            miner.addInvalidShare();
+            return CompletableFuture.completedFuture(ShareStatus.DUPLICATE);
+        }
+
         return resultHashValidator.validate(result, job.getTemplate().getHashingBlob(instanceId, miner.getId(), nonce))
                 .thenApply(valid -> {
                     if (!valid) {

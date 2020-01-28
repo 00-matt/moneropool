@@ -121,6 +121,9 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
                 case LOW_DIFFICULTY:
                     replyWithError(ctx, request.getId(), new StratumError(-1, "Low difficulty share"));
                     break;
+                case DUPLICATE:
+                    replyWithError(ctx, request.getId(), new StratumError(-1, "Duplicate share"));
+                    break;
                 case VALID:
                     reply(ctx, request.getId(), Map.of("status", "OK"));
                     break;
