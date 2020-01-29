@@ -16,6 +16,7 @@ import uk.offtopica.moneropool.stratum.message.StratumError;
 import uk.offtopica.moneropool.stratum.message.StratumRequest;
 import uk.offtopica.moneropool.stratum.message.StratumResponse;
 import uk.offtopica.moneropool.util.HexUtils;
+import uk.offtopica.moneropool.util.InvalidHexStringException;
 
 import java.net.SocketAddress;
 import java.util.List;
@@ -110,8 +111,16 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     private void onSubmit(ChannelHandlerContext ctx, StratumRequest request) {
         // TODO: Validate job ID
 
-        final byte[] nonce = HexUtils.hexStringToByteArray((String) request.getParams().get("nonce"));
-        final byte[] result = HexUtils.hexStringToByteArray((String) request.getParams().get("result"));
+        final byte[] nonce;
+        final byte[] result;
+
+        try {
+            nonce = HexUtils.hexStringToByteArray((String) request.getParams().get("nonce"));
+            result = HexUtils.hexStringToByteArray((String) request.getParams().get("result"));
+        } catch (InvalidHexStringException e) {
+            replyWithError(ctx, request.getId(), new StratumError(-1, "Malformed request"));
+            return;
+        }
 
         shareProcessor.process(miner, lastJob, nonce, result).thenAccept(status -> {
             switch (status) {

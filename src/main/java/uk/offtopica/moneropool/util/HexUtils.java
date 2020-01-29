@@ -15,11 +15,21 @@ public class HexUtils {
         return new String(string);
     }
 
-    public static byte[] hexStringToByteArray(String hex) {
+    public static byte[] hexStringToByteArray(String hex) throws InvalidHexStringException {
+        if (hex.length() % 2 != 0) {
+            throw new InvalidHexStringException("Invalid length");
+        }
+
         byte[] array = new byte[hex.length() / 2];
         for (int i = 0; i < hex.length(); i += 2) {
-            array[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
-                    + Character.digit(hex.charAt(i + 1), 16));
+            final int n1 = Character.digit(hex.charAt(i), 16);
+            final int n2 = Character.digit(hex.charAt(i + 1), 16);
+
+            if (n1 == -1 || n2 == -1) {
+                throw new InvalidHexStringException("Invalid character");
+            }
+
+            array[i / 2] = (byte) ((n1 << 4) + n2);
         }
         return array;
     }

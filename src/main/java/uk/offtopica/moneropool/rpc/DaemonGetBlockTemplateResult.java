@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import uk.offtopica.moneropool.BlockTemplate;
 import uk.offtopica.moneropool.Difficulty;
 import uk.offtopica.moneropool.util.HexUtils;
+import uk.offtopica.moneropool.util.InvalidHexStringException;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -37,23 +38,26 @@ public class DaemonGetBlockTemplateResult extends RpcResult {
     private String nextSeedHash;
 
     public BlockTemplate asBlockTemplate() {
-        BlockTemplate blockTemplate = new BlockTemplate();
+        try {
+            BlockTemplate blockTemplate = new BlockTemplate();
+            blockTemplate.setTemplateBlob(HexUtils.hexStringToByteArray(blockTemplateBlob));
+            blockTemplate.setDifficulty(new Difficulty(difficulty));
+            blockTemplate.setExpectedReward(expectedReward);
+            blockTemplate.setHeight(height);
+            blockTemplate.setPrevHash(HexUtils.hexStringToByteArray(prevHash));
+            blockTemplate.setReservedOffset(reservedOffset);
+            blockTemplate.setSeedHeight(seedHeight);
+            blockTemplate.setSeedHash(HexUtils.hexStringToByteArray(seedHash));
 
-        blockTemplate.setTemplateBlob(HexUtils.hexStringToByteArray(blockTemplateBlob));
-        blockTemplate.setDifficulty(new Difficulty(difficulty));
-        blockTemplate.setExpectedReward(expectedReward);
-        blockTemplate.setHeight(height);
-        blockTemplate.setPrevHash(HexUtils.hexStringToByteArray(prevHash));
-        blockTemplate.setReservedOffset(reservedOffset);
-        blockTemplate.setSeedHeight(seedHeight);
-        blockTemplate.setSeedHash(HexUtils.hexStringToByteArray(seedHash));
+            if (nextSeedHash == null || nextSeedHash.length() == 0) {
+                blockTemplate.setNextSeedHash(null);
+            } else {
+                blockTemplate.setNextSeedHash(HexUtils.hexStringToByteArray(nextSeedHash));
+            }
 
-        if (nextSeedHash == null || nextSeedHash.length() == 0) {
-            blockTemplate.setNextSeedHash(null);
-        } else {
-            blockTemplate.setNextSeedHash(HexUtils.hexStringToByteArray(nextSeedHash));
+            return blockTemplate;
+        } catch (InvalidHexStringException e) {
+            throw new RuntimeException(e);
         }
-
-        return blockTemplate;
     }
 }
