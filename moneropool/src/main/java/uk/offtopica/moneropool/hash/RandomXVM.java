@@ -58,13 +58,10 @@ class RandomXVM {
         Thread[] threads = new Thread[threadCount];
 
         for (int i = 0; i < threadCount; i++) {
-            long thisSize = size;
+            final long thisSize = size + (i == threadCount - 1 ? last : 0);
             final int thisStart = start;
-            if (i == threadCount - 1) {
-                thisSize += last;
-            }
             threads[i] = new Thread(() -> {
-                RandomX.initDataset(dataset, cache, new NativeLong(thisStart), new NativeLong(size));
+                RandomX.initDataset(dataset, cache, new NativeLong(thisStart), new NativeLong(thisSize));
             });
             start += thisSize;
         }
