@@ -16,6 +16,7 @@ public class Miner {
     private BigInteger hashesSubmitted = BigInteger.ZERO;
     private Long validSharesSubmitted = 0L;
     private Long invalidSharesSubmitted = 0L;
+    private Integer userId;
 
     public void addInvalidShare() {
         invalidSharesSubmitted++;

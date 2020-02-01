@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import uk.offtopica.moneropool.*;
+import uk.offtopica.moneropool.database.MinerRepository;
 import uk.offtopica.moneropool.stratum.message.StratumError;
 import uk.offtopica.moneropool.stratum.message.StratumRequest;
 import uk.offtopica.moneropool.stratum.message.StratumResponse;
@@ -39,6 +40,9 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
     private ShareProcessor shareProcessor;
+
+    @Autowired
+    private MinerRepository minerRepository;
 
     private SocketAddress remoteAddress;
     private BlockTemplate blockTemplate;
@@ -68,6 +72,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         miner.setPassword(password);
         miner.setAgent(agent);
         miner.setId(ThreadLocalRandom.current().nextLong());
+        miner.setUserId(minerRepository.ensure(username));
 
         minerChannelGroup.add(ctx.channel());
         blockTemplate = blockTemplateNotifier.getLastBlockTemplate();
