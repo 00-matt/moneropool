@@ -52,7 +52,7 @@ class RandomXVM {
         log.debug("Initialising randomX dataset with {} threads", threadCount);
 
         long size = datasetItemCount / threadCount;
-        long last = datasetItemCount / threadCount;
+        long last = datasetItemCount % threadCount;
         int start = 0;
 
         Thread[] threads = new Thread[threadCount];
@@ -60,6 +60,7 @@ class RandomXVM {
         for (int i = 0; i < threadCount; i++) {
             final long thisSize = size + (i == threadCount - 1 ? last : 0);
             final int thisStart = start;
+
             threads[i] = new Thread(() -> {
                 RandomX.initDataset(dataset, cache, new NativeLong(thisStart), new NativeLong(thisSize));
             });
