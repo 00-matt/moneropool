@@ -4,6 +4,8 @@ import lombok.Data;
 import uk.offtopica.moneropool.util.ByteArrayUtils;
 import uk.offtopica.moneropool.util.NativeUtils;
 
+import java.util.Arrays;
+
 @Data
 public class BlockTemplate {
     private byte[] templateBlob;

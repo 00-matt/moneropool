@@ -54,7 +54,7 @@ public class ShareProcessor {
                             final byte[] templateBlob = job.getTemplate().withExtra(instanceId, miner.getId(), nonce);
                             daemon.submitBlock(templateBlob);
                             // TODO:
-                            blockRepository.insert(job.getHeight().intValue());
+                            blockRepository.insert(result, job.getHeight().intValue());
                         } catch (IOException e) {
                             log.error("Failed to submit block", e);
                         }

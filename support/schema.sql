@@ -1,5 +1,6 @@
 CREATE TABLE block (
        id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+       hash TEXT NOT NULL,
        height INT NOT NULL,
        created_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
