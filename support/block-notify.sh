@@ -13,4 +13,4 @@
 REDIS_HOST=${REDIS_HOST:-127.0.0.1}
 REDIS_PORT=${REDIS_PORT:-6379}
 
-echo "PUBLISH monero.${1}.blocks ${2}" | nc -q0 127.0.0.1 6379
+echo "PUBLISH monero.${1}.blocks ${2}" | nc -q0 "${REDIS_HOST}" "${REDIS_PORT}"
