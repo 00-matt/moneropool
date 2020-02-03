@@ -7,6 +7,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import uk.offtopica.moneropool.notify.NotifyClient;
 import uk.offtopica.moneropool.stratum.StratumServer;
 
 import java.util.concurrent.ExecutorService;
@@ -24,8 +25,8 @@ public class MoneroPoolApplication {
         final BlockTemplateNotifier blockTemplateNotifier = context.getBean(BlockTemplateNotifier.class);
         blockTemplateNotifier.update();
 
-        final NotifyServer notifyServer = context.getBean(NotifyServer.class);
-        notifyServer.start();
+        final NotifyClient notifyClient = context.getBean(NotifyClient.class);
+        notifyClient.start();
 
         final StratumServer stratumServer = context.getBean(StratumServer.class);
         final ChannelFuture f = stratumServer.start().sync();
