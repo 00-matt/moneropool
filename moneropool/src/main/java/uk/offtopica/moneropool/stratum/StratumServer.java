@@ -18,11 +18,11 @@ public class StratumServer {
     private int port;
 
     @Autowired
-    @Qualifier("parentGroup")
+    @Qualifier("stratumParentGroup")
     private EventLoopGroup parentGroup;
 
     @Autowired
-    @Qualifier("childGroup")
+    @Qualifier("stratumChildGroup")
     private EventLoopGroup childGroup;
 
     @Autowired

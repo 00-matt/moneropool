@@ -10,7 +10,6 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +19,6 @@ import uk.offtopica.moneropool.stratum.message.StratumMessageDeserializer;
 
 @Configuration
 public class StratumServerConfiguration {
-    @Autowired
-    private StratumChannelInitializer stratumChannelInitializer;
-
     @Bean
     SimpleModule stratumJacksonModule() {
         final SimpleModule module = new SimpleModule();
@@ -31,12 +27,12 @@ public class StratumServerConfiguration {
     }
 
     @Bean
-    EventLoopGroup parentGroup(@Value("${stratum.parentThreads}") int parentThreads) {
+    EventLoopGroup stratumParentGroup(@Value("${stratum.parentThreads}") int parentThreads) {
         return new NioEventLoopGroup(parentThreads);
     }
 
     @Bean
-    EventLoopGroup childGroup(@Value("${stratum.childThreads}") int childThreads) {
+    EventLoopGroup stratumChildGroup(@Value("${stratum.childThreads}") int childThreads) {
         return new NioEventLoopGroup(childThreads);
     }
 
@@ -46,16 +42,16 @@ public class StratumServerConfiguration {
     }
 
     @Bean
-    Class<? extends ServerChannel> serverChannel() {
+    Class<? extends ServerChannel> stratumServerChannel() {
         return NioServerSocketChannel.class;
     }
 
     @Bean
-    ServerBootstrap serverBootstrap(@Qualifier("parentGroup") EventLoopGroup parentGroup,
-                                    @Qualifier("childGroup") EventLoopGroup childGroup,
-                                    Class<? extends ServerChannel> serverChannel,
-                                    @Value("${stratum.port}") int port,
-                                    @Value("${stratum.backlog}") int backlog) {
+    ServerBootstrap stratumServerBootstrap(@Qualifier("stratumParentGroup") EventLoopGroup parentGroup,
+                                           @Qualifier("stratumChildGroup") EventLoopGroup childGroup,
+                                           @Qualifier("stratumServerChannel") Class<? extends ServerChannel> serverChannel,
+                                           @Value("${stratum.backlog}") int backlog,
+                                           StratumChannelInitializer stratumChannelInitializer) {
         ServerBootstrap b = new ServerBootstrap();
         b.group(parentGroup, childGroup);
         b.option(ChannelOption.SO_BACKLOG, backlog);
