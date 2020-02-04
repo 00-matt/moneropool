@@ -52,6 +52,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     private void onLogin(ChannelHandlerContext ctx, StratumRequest request) {
         if (miner != null) {
             replyWithError(ctx, request.getId(), new StratumError(-1, "Already logged in"));
+            return;
         }
 
         Map<String, Object> params = request.getParams();
@@ -114,6 +115,11 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void onSubmit(ChannelHandlerContext ctx, StratumRequest request) {
+        if (miner == null) {
+            replyWithError(ctx, request.getId(), new StratumError(-1, "Unauthenticated"));
+            return;
+        }
+
         // TODO: Validate job ID
 
         final byte[] nonce;
