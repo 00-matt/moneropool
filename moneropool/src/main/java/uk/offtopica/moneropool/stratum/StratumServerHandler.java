@@ -44,6 +44,9 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     private MinerRepository minerRepository;
 
+    @Autowired
+    private AddressValidator addressValidator;
+
     private SocketAddress remoteAddress;
     private BlockTemplate blockTemplate;
     private Miner miner;
@@ -56,8 +59,15 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         }
 
         Map<String, Object> params = request.getParams();
+
         final String username = (String) params.get("login");
+        if (!addressValidator.validate(username)) {
+            replyWithError(ctx, request.getId(), new StratumError(-1, "Invalid wallet address"));
+            return;
+        }
+
         final String password = (String) params.get("pass");
+
         final String agent;
         if (params.containsKey("agent")) {
             agent = (String) params.get("agent");
@@ -68,6 +78,7 @@ public class StratumServerHandler extends ChannelInboundHandlerAdapter {
         } else {
             agent = null;
         }
+
         miner = new Miner();
         miner.setUsername(username);
         miner.setPassword(password);

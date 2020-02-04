@@ -133,6 +133,14 @@ block notifications are routed correctly.
 
 Example: `pool.network=stagenet`
 
+### payment.allowIntegrated
+
+Allow miners to use an integrated address. Transactions with a payment
+id (i.e. payments to a miner using an integrated address) cannot be
+batched together, resulting in higher transaction fees.
+
+Example: `payment.allowIntegrated=false`
+
 ## api
 
 A Spring Boot application. See [the Spring Boot
