@@ -14,4 +14,8 @@ public class MinerService {
     public Miner findByWalletAddress(String walletAddress) throws MinerNotFoundException {
         return minerRepository.findByWalletAddress(walletAddress).orElseThrow(MinerNotFoundException::new);
     }
+
+    public Long findMinerCount() {
+        return minerRepository.count();
+    }
 }
