@@ -37,11 +37,9 @@ public class AddressValidator {
             case "mainnet":
                 return MoneroNetworkConstants.MAINNET;
             case "testnet":
-                // TODO: Move upstream.
-                return new MoneroNetworkConstants((byte) 53, (byte) 63, (byte) 54);
+                return MoneroNetworkConstants.TESTNET;
             case "stagenet":
-                // TODO: Move upstream.
-                return new MoneroNetworkConstants((byte) 24, (byte) 36, (byte) 25);
+                return MoneroNetworkConstants.STAGENET;
             default:
                 throw new IllegalArgumentException("Unknown network " + network);
         }
