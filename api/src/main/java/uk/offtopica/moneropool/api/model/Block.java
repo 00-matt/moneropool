@@ -17,6 +17,9 @@ public class Block {
     @Column(name = "height", nullable = false, updatable = false)
     private Integer height;
 
+    @Column(name = "paid", nullable = false, updatable = false)
+    private Boolean paid;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 }
