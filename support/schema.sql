@@ -3,6 +3,9 @@ CREATE TABLE block (
        hash TEXT NOT NULL,
        height INT NOT NULL,
        paid BOOLEAN DEFAULT FALSE NOT NULL,
+       orphaned BOOLEAN DEFAULT FALSE NOT NULL,
+       expected_reward BIGINT NOT NULL,
+       difficulty BIGINT NOT NULL,
        created_at TIMESTAMP DEFAULT NOW() NOT NULL
 );
 

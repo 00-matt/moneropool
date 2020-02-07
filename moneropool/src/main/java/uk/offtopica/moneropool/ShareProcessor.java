@@ -53,8 +53,10 @@ public class ShareProcessor {
                         try {
                             final byte[] templateBlob = job.getTemplate().withExtra(instanceId, miner.getId(), nonce);
                             daemon.submitBlock(templateBlob);
-                            // TODO:
-                            blockRepository.insert(result, job.getHeight().intValue());
+                            // TODO: Assuming that difficulty fits in 64 bits.
+                            blockRepository.insert(result, job.getHeight().intValue(),
+                                    job.getTemplate().getExpectedReward(),
+                                    job.getTemplate().getDifficulty().getDifficulty().longValue());
                         } catch (IOException e) {
                             log.error("Failed to submit block", e);
                         }

@@ -20,6 +20,15 @@ public class Block {
     @Column(name = "paid", nullable = false, updatable = false)
     private Boolean paid;
 
+    @Column(name = "orphaned", nullable = false, updatable = false)
+    private Boolean orphaned;
+
+    @Column(name = "expected_reward", nullable = false, updatable = false)
+    private Long expectedReward;
+
+    @Column(name = "difficulty", nullable = false, updatable = false)
+    private Long difficulty;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 }
