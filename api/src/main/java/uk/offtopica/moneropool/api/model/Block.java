@@ -1,5 +1,6 @@
 package uk.offtopica.moneropool.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,11 +25,13 @@ public class Block {
     private Boolean orphaned;
 
     @Column(name = "expected_reward", nullable = false, updatable = false)
+    @JsonProperty("expected_reward")
     private Long expectedReward;
 
     @Column(name = "difficulty", nullable = false, updatable = false)
     private Long difficulty;
 
     @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 }
