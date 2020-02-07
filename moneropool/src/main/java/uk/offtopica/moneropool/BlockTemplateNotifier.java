@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 @Component
 @Slf4j
 public class BlockTemplateNotifier {
-    private static final int RESERVE_SIZE = 60;
+    private static final int RESERVE_SIZE = 20;
 
     @Autowired
     private MoneroDaemon moneroDaemon;
