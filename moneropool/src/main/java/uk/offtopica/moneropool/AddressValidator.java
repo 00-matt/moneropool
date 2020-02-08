@@ -11,15 +11,22 @@ import uk.offtopica.addressutil.monero.MoneroNetworkConstants;
 public class AddressValidator {
     private final boolean allowIntegratedAddress;
     private final MoneroAddressDecoder decoder;
+    private final boolean enabled;
 
     public AddressValidator(@Value("${pool.coin}") String coin,
                             @Value("${pool.network}") String network,
-                            @Value("${payments.allowIntegrated}") boolean allowIntegratedAddress) {
-        this.allowIntegratedAddress = false;
+                            @Value("${payments.allowIntegrated}") boolean allowIntegratedAddress,
+                            @Value("${addressValidator.enabled:true}") boolean enabled) {
+        this.allowIntegratedAddress = allowIntegratedAddress;
         decoder = new MoneroAddressDecoder(getNetworkConstants(coin, network));
+        this.enabled = enabled;
     }
 
     public boolean validate(String address) {
+        if (!enabled) {
+            return true;
+        }
+
         try {
             MoneroAddress decoded = decoder.decode(address);
             return allowIntegratedAddress || !decoded.isIntegratedAddress();

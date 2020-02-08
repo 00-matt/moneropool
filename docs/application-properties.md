@@ -141,6 +141,13 @@ batched together, resulting in higher transaction fees.
 
 Example: `payment.allowIntegrated=false`
 
+### addressValidator.enabled
+
+True to validate wallet addresses. Must be true if you plan on using
+the stock PPLNS module.
+
+Example: `addressValidator.enabled=true`
+
 ## api
 
 A Spring Boot application. See [the Spring Boot
