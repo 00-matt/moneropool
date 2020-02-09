@@ -25,9 +25,7 @@ using namespace cryptonote;
 
 JNIEXPORT jbyteArray JNICALL
 Java_uk_offtopica_moneropool_util_NativeUtils_getHashingBlob(
-    JNIEnv *env, jclass clazz, jbyteArray data_obj) {
-  (void)clazz;
-
+    JNIEnv *env, jclass, jbyteArray data_obj) {
   jsize data_len = env->GetArrayLength(data_obj);
   jbyte *data = env->GetByteArrayElements(data_obj, nullptr);
 
