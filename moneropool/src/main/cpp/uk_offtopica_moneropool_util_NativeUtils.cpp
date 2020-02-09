@@ -36,9 +36,11 @@ Java_uk_offtopica_moneropool_util_NativeUtils_getHashingBlob(
   std::string output;
   block b{};
 
-  // TODO: This can fail.
   if (!parse_and_validate_block_from_blob(input, b)) {
-
+    jclass ex_class =
+        env->FindClass("uk/offtopica/moneropool/util/InvalidBlockException");
+    env->ThrowNew(ex_class, "Failed to parse block");
+    return nullptr;
   }
 
   output = get_block_hashing_blob(b);
