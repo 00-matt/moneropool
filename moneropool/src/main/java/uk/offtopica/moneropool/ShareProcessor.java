@@ -6,16 +6,19 @@ import org.springframework.stereotype.Service;
 import uk.offtopica.moneropool.database.BlockRepository;
 import uk.offtopica.moneropool.database.ShareRepository;
 import uk.offtopica.moneropool.hash.ResultHashValidator;
-import uk.offtopica.moneropool.rpc.MoneroDaemon;
+import uk.offtopica.monerorpc.daemon.MoneroDaemonRpcClient;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+
+import static uk.offtopica.moneropool.util.BlockTemplateUtils.getHashingBlob;
+import static uk.offtopica.moneropool.util.BlockTemplateUtils.withExtra;
 
 @Service
 @Slf4j
 public class ShareProcessor {
     @Autowired
-    private MoneroDaemon daemon;
+    private MoneroDaemonRpcClient daemon;
 
     @Autowired
     private InstanceId instanceId;
@@ -42,21 +45,21 @@ public class ShareProcessor {
             return CompletableFuture.completedFuture(ShareStatus.DUPLICATE);
         }
 
-        return resultHashValidator.validate(result, job.getTemplate().getHashingBlob(instanceId, miner.getId(), nonce))
+        return resultHashValidator.validate(result, getHashingBlob(job.getTemplate(), instanceId, miner.getId(), nonce))
                 .thenApply(valid -> {
                     if (!valid) {
                         return ShareStatus.BAD_HASH;
                     }
 
-                    if (shareDifficulty.compareTo(job.getTemplate().getDifficulty()) >= 0) {
+                    if (shareDifficulty.compareTo(new Difficulty(job.getTemplate().getDifficulty())) >= 0) {
                         log.info("Found block at height {}", job.getHeight());
                         try {
-                            final byte[] templateBlob = job.getTemplate().withExtra(instanceId, miner.getId(), nonce);
+                            final byte[] templateBlob = withExtra(job.getTemplate(), instanceId, miner.getId(), nonce);
                             daemon.submitBlock(templateBlob);
                             // TODO: Assuming that difficulty fits in 64 bits.
                             blockRepository.insert(result, job.getHeight().intValue(),
                                     job.getTemplate().getExpectedReward(),
-                                    job.getTemplate().getDifficulty().getDifficulty().longValue());
+                                    job.getTemplate().getDifficulty().longValue());
                         } catch (IOException e) {
                             log.error("Failed to submit block", e);
                         }

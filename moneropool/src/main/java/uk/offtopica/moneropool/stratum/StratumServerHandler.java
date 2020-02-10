@@ -18,6 +18,7 @@ import uk.offtopica.moneropool.stratum.message.StratumRequest;
 import uk.offtopica.moneropool.stratum.message.StratumResponse;
 import uk.offtopica.moneropool.util.HexUtils;
 import uk.offtopica.moneropool.util.InvalidHexStringException;
+import uk.offtopica.monerorpc.daemon.BlockTemplate;
 
 import java.net.SocketAddress;
 import java.util.List;

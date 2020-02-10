@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import uk.offtopica.moneropool.BlockTemplate;
 import uk.offtopica.moneropool.util.ArrayUtils;
+import uk.offtopica.monerorpc.daemon.BlockTemplate;
 import uk.offtopica.randomx4j.RandomX;
 
 import java.util.Arrays;

@@ -109,6 +109,11 @@
             <artifactId>netty-transport</artifactId>
         </dependency>
         <dependency>
+            <groupId>uk.offtopica</groupId>
+            <artifactId>monerorpc</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.2.9</version>

@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.offtopica.moneropool.hash.ResultHashValidator;
-import uk.offtopica.moneropool.rpc.MoneroDaemon;
+import uk.offtopica.monerorpc.daemon.BlockTemplate;
+import uk.offtopica.monerorpc.daemon.MoneroDaemonRpcClient;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -20,7 +21,7 @@ public class BlockTemplateNotifier {
     private static final int RESERVE_SIZE = 20;
 
     @Autowired
-    private MoneroDaemon moneroDaemon;
+    private MoneroDaemonRpcClient moneroDaemon;
 
     @Autowired
     @Qualifier("minerChannelGroup")

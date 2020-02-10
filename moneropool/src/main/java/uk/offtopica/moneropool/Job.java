@@ -1,6 +1,7 @@
 package uk.offtopica.moneropool;
 
 import lombok.Data;
+import uk.offtopica.monerorpc.daemon.BlockTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
