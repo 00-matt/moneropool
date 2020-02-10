@@ -25,9 +25,7 @@ using namespace cryptonote;
 
 JNIEXPORT jbyteArray JNICALL
 Java_uk_offtopica_moneropool_util_NativeUtils_getHashingBlob(
-    JNIEnv *env, jclass clazz, jbyteArray data_obj) {
-  (void)clazz;
-
+    JNIEnv *env, jclass, jbyteArray data_obj) {
   jsize data_len = env->GetArrayLength(data_obj);
   jbyte *data = env->GetByteArrayElements(data_obj, nullptr);
 
@@ -36,9 +34,11 @@ Java_uk_offtopica_moneropool_util_NativeUtils_getHashingBlob(
   std::string output;
   block b{};
 
-  // TODO: This can fail.
   if (!parse_and_validate_block_from_blob(input, b)) {
-
+    jclass ex_class =
+        env->FindClass("uk/offtopica/moneropool/util/InvalidBlockException");
+    env->ThrowNew(ex_class, "Failed to parse block");
+    return nullptr;
   }
 
   output = get_block_hashing_blob(b);

@@ -3,6 +3,7 @@ package uk.offtopica.moneropool.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.offtopica.moneropool.util.HexUtils;
+import uk.offtopica.moneropool.util.InvalidBlockException;
 import uk.offtopica.moneropool.util.InvalidHexStringException;
 import uk.offtopica.moneropool.util.NativeUtils;
 
@@ -20,5 +21,10 @@ class NativeUtilsTest {
                         "4d96fad3c15013fdc3978410cad22a2dc1994275e422bb7374201");
         byte[] actual = NativeUtils.getHashingBlob(template);
         Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    void testGetHashingBlockThrowsOnInvalid() {
+        Assertions.assertThrows(InvalidBlockException.class, () -> NativeUtils.getHashingBlob(new byte[] {1}));
     }
 }
