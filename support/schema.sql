@@ -6,18 +6,18 @@ CREATE TABLE block (
        orphaned BOOLEAN DEFAULT FALSE NOT NULL,
        expected_reward BIGINT NOT NULL,
        difficulty BIGINT NOT NULL,
-       created_at TIMESTAMP DEFAULT NOW() NOT NULL
+       created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE miner (
        id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
        wallet_address TEXT NOT NULL UNIQUE,
-       created_at TIMESTAMP DEFAULT NOW() NOT NULL
+       created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE share (
        id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
        miner_id INT REFERENCES miner(id) ON DELETE CASCADE NOT NULL,
        difficulty INT NOT NULL,
-       created_at TIMESTAMP DEFAULT NOW() NOT NULL
+       created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
