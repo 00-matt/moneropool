@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++11 -Wall -Wextra -O2
+CXXFLAGS = -std=c++11 -Wall -Wextra -O2 -fPIC
 CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 LDFLAGS = -shared
 LDLIBS = -lcryptonote_basic
