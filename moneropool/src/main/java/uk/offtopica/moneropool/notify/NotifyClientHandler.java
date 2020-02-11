@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import uk.offtopica.moneropool.BlockTemplateNotifier;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -29,7 +29,7 @@ public class NotifyClientHandler extends ChannelInboundHandlerAdapter {
     private static final ByteBuf MESSAGE = Unpooled.copiedBuffer("message", StandardCharsets.UTF_8);
 
     @Autowired
-    private BlockTemplateNotifier blockTemplateNotifier;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Value("${pool.coin}")
     private String coin;
@@ -71,7 +71,7 @@ public class NotifyClientHandler extends ChannelInboundHandlerAdapter {
 
                 log.trace("Notified of block hash {}", hash);
 
-                blockTemplateNotifier.update();
+                applicationEventPublisher.publishEvent(new NewNetworkBlockEvent(this, hash));
             }
         } finally {
             ReferenceCountUtil.release(msg);

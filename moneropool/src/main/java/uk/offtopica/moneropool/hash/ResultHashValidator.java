@@ -3,7 +3,9 @@ package uk.offtopica.moneropool.hash;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
+import uk.offtopica.moneropool.NewBlockTemplateEvent;
 import uk.offtopica.moneropool.util.ArrayUtils;
 import uk.offtopica.monerorpc.daemon.BlockTemplate;
 import uk.offtopica.randomx4j.RandomX;
@@ -15,7 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 @Slf4j
-public class ResultHashValidator {
+public class ResultHashValidator implements ApplicationListener<NewBlockTemplateEvent> {
     private int flags;
     private RandomXVM currentVm;
     private ReentrantReadWriteLock lock;
@@ -50,7 +52,7 @@ public class ResultHashValidator {
         }, globalExecutor);
     }
 
-    public void onBlockTemplate(BlockTemplate blockTemplate) {
+    private void onBlockTemplate(BlockTemplate blockTemplate) {
         try {
             lock.writeLock().lock();
 
@@ -67,5 +69,10 @@ public class ResultHashValidator {
         } finally {
             lock.writeLock().unlock();
         }
+    }
+
+    @Override
+    public void onApplicationEvent(NewBlockTemplateEvent event) {
+        globalExecutor.execute(() -> onBlockTemplate(event.getBlockTemplate()));
     }
 }
