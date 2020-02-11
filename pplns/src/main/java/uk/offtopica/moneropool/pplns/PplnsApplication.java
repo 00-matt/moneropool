@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import uk.offtopica.moneropool.pplns.service.PplnsService;
 import uk.offtopica.monerorpc.daemon.MoneroDaemonRpcClient;
+import uk.offtopica.monerorpc.wallet.MoneroWalletRpcClient;
 
 import java.net.URI;
 
@@ -27,5 +28,10 @@ public class PplnsApplication {
     @Bean
     MoneroDaemonRpcClient daemonRpcClient(@Value("${daemon.address}") URI uri) {
         return new MoneroDaemonRpcClient(uri);
+    }
+
+    @Bean
+    MoneroWalletRpcClient walletRpcClient(@Value("${wallet.address}") URI uri) {
+        return new MoneroWalletRpcClient(uri);
     }
 }

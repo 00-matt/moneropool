@@ -26,4 +26,20 @@ public class BlockRepository {
                     .executeAndFetch(Block.class);
         }
     }
+
+    public void markAsOrphan(Block block) {
+        try (Connection conn = sql2o.open()) {
+            conn.createQuery("UPDATE block SET orphan = TRUE WHERE block.id = :id;")
+                    .addParameter("id", block.getId())
+                    .executeUpdate();
+        }
+    }
+
+    public void markAsPaid(Block block) {
+        try (Connection conn = sql2o.open()) {
+            conn.createQuery("UPDATE block SET paid = TRUE WHERE block.id = :id;")
+                    .addParameter("id", block.getId())
+                    .executeUpdate();
+        }
+    }
 }
