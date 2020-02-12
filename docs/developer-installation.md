@@ -122,6 +122,18 @@ cd /path/to/moneropool/api
 mvn spring-boot:run
 ```
 
+## 4.3 PPLNS Payments
+
+Normally the payment runner would be launched by a scheduler like
+cron, but while developing you can run it from your IDE, or in your
+shell with the following commands:
+
+```
+cd /path/to/moneropool/pplns
+mvn package
+java -jar target/pplns-0.1.0-SNAPSHOT.jar
+```
+
 ## 5 Testing
 
 Use a miner such as XMRig:
