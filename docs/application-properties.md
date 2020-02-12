@@ -173,3 +173,65 @@ Example: `spring.datasource.username=postgres`
 Password to connect to the database with.
 
 Example: `spring.datsource.password=sergtsop`
+
+## pplns
+
+### `daemon.address`
+
+Same as daemon.address above. Does not need to be the same daemon as
+what the moneropool module uses, just has to be on the same network.
+
+Example: `daemon.address=http://localhost:38081/json_rpc`
+
+### `wallet.address`
+
+Address of a wallet RPC server. Must be launched with
+`--disable-rpc-login`.
+
+Example: `wallet.address=http://localhost:38088/json_rpc`
+
+### `database.url`
+
+[JDBC connection URL to your
+database](https://docs.oracle.com/javase/tutorial/jdbc/basics/connecting.html#db_connection_url).
+
+The pool only supplies a driver for postgres; other databases will
+require a driver to be added to the classpath before use.
+
+Example: `database.url=jdbc:postgresql://localhost:5432/postgres`
+
+### `database.user`
+
+Username to connect to the database with.
+
+Example: `database.user=postgres`
+
+### `database.pass`
+
+Password to connect to the database with.
+
+Example: `database.pass=sergtsop`
+
+### `pplns.feeDivisor`
+
+Amount to divide the block reward by to get the fee. A value of 100
+would mean `block_reward/100`, aka. a fee of 1%. A value of 5000 would
+be a fee of 0.5%, etc.
+
+Example: `pplns.feeDivisor=100`
+
+### `pplns.unlock`
+
+The number of blocks it takes for a coinbase reward to become
+spendable. This value can be found in `cryptonote_config.h`.
+
+It is possible to use a smaller value if you have the funds available
+in your wallet to cover locked balances.
+
+Example: `pplns.unlock=60`
+
+### `pplns.window`
+
+The size of the PPLNS window, in multiples of the difficulty.
+
+Example: `pplns.window=2`
