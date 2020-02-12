@@ -21,3 +21,10 @@ CREATE TABLE share (
        difficulty INT NOT NULL,
        created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
+
+CREATE TABLE transaction (
+       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+       block_id INT REFERENCES block(id) ON DELETE CASCADE NOT NULL,
+       hash TEXT NOT NULL,
+       created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
