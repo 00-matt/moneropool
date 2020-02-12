@@ -55,7 +55,7 @@ system.
 
 Example: `globalExecutor.threads=8`
 
-### varDiff.shareTargetTime
+### `varDiff.shareTargetTime`
 
 The pool will attempt to adjust job difficulties to ensure that on
 average, a job takes this many seconds to complete. Lower values will
@@ -63,7 +63,7 @@ place more load on the pool.
 
 Example: `varDiff.shareTargetTime=30`
 
-### varDiff.start
+### `varDiff.start`
 
 The starting difficulty for a new miner with an unknown hashrate. They
 will continue to receive jobs of this difficulty until they have
@@ -71,20 +71,20 @@ submitted `varDiff.wait` shares.
 
 Example: `varDiff.start=30000`
 
-### varDiff.minimum
+### `varDiff.minimum`
 
 The minimum difficulty for any miner.
 
 Example: `varDiff.minimum=20000`
 
-### varDiff.wait
+### `varDiff.wait`
 
 Miners will receive jobs of the starting difficulty until they have
 submitted this many shares.
 
 Example: `varDiff.wait=3`
 
-### database.url
+### `database.url`
 
 [JDBC connection URL to your
 database](https://docs.oracle.com/javase/tutorial/jdbc/basics/connecting.html#db_connection_url).
@@ -94,46 +94,46 @@ require a driver to be added to the classpath before use.
 
 Example: `database.url=jdbc:postgresql://localhost:5432/postgres`
 
-### database.user
+### `database.user`
 
 Username to connect to the database with.
 
 Example: `database.user=postgres`
 
-### database.pass
+### `database.pass`
 
 Password to connect to the database with.
 
 Example: `database.pass=sergtsop`
 
-### redis.host
+### `redis.host`
 
 Hostname to connect to a Redis database with. Currently only used for
 block notifications.
 
 Example: `redis.host=localhost`
 
-### redis.port
+### `redis.port`
 
 Port to connect to a Redis database with.
 
 Example: `redis.port=6379`
 
-### pool.coin
+### `pool.coin`
 
 The coin that this pool is mining. Currently only used to ensure that
 block notifications are routed correctly.
 
 Example: `pool.coin=monero`
 
-### pool.network
+### `pool.network`
 
 The network that this pool is mining on. Currently only used to ensure that
 block notifications are routed correctly.
 
 Example: `pool.network=stagenet`
 
-### payment.allowIntegrated
+### `payment.allowIntegrated`
 
 Allow miners to use an integrated address. Transactions with a payment
 id (i.e. payments to a miner using an integrated address) cannot be
@@ -141,7 +141,7 @@ batched together, resulting in higher transaction fees.
 
 Example: `payment.allowIntegrated=false`
 
-### addressValidator.enabled
+### `addressValidator.enabled`
 
 True to validate wallet addresses. Must be true if you plan on using
 the stock PPLNS module.

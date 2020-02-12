@@ -7,7 +7,7 @@ hacking on moneropool. It will not lead to a production-ready pool.
 
 - A modern Linux system (other systems may require minor persuasion)
 - Docker
-- >=Java 11
+- \>=Java 11
 - Maven
 
 ## 2 Databases
