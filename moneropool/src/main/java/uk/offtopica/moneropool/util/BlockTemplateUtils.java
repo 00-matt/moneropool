@@ -1,15 +1,18 @@
 package uk.offtopica.moneropool.util;
 
+import uk.offtopica.monerocore.BlockHashingBlobCreator;
 import uk.offtopica.moneropool.InstanceId;
 import uk.offtopica.monerorpc.daemon.BlockTemplate;
 
 public class BlockTemplateUtils {
+    private static final BlockHashingBlobCreator bhbc = new BlockHashingBlobCreator();
+
     public static byte[] getHashingBlob(BlockTemplate blockTemplate, InstanceId instanceId, Long minerId) {
-        return NativeUtils.getHashingBlob(withExtra(blockTemplate, instanceId, minerId, new byte[]{}));
+        return bhbc.getHashingBlob(withExtra(blockTemplate, instanceId, minerId, new byte[]{}));
     }
 
     public static byte[] getHashingBlob(BlockTemplate blockTemplate, InstanceId instanceId, Long minerId, byte[] nonce) {
-        return NativeUtils.getHashingBlob(withExtra(blockTemplate, instanceId, minerId, nonce));
+        return bhbc.getHashingBlob(withExtra(blockTemplate, instanceId, minerId, nonce));
     }
 
     public static byte[] withExtra(BlockTemplate blockTemplate, InstanceId instanceId, Long minerId, byte[] nonce) {

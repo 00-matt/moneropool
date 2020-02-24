@@ -110,6 +110,11 @@
         </dependency>
         <dependency>
             <groupId>uk.offtopica</groupId>
+            <artifactId>monerocore</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.offtopica</groupId>
             <artifactId>monerorpc</artifactId>
             <version>0.1.0</version>
         </dependency>

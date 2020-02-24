@@ -63,7 +63,7 @@ make -j$(nproc)
 
 # Install the binaries and shared libraries
 sudo cp -v bin/* /usr/local/bin/
-find . -name '*.so' -exec sudo cp -v {} /usr/local/lib/ \;
+sudo cp -v external/randomx/librandomx.so /usr/local/lib/;
 
 # Update shared library cache
 sudo ldconfig
@@ -84,21 +84,8 @@ will never get new jobs.
 
 ### 4.1 moneropool Daemon
 
-moneropool requires some native libraries, build and install those
-first:
-
-```bash
-# Ensure JAVA_HOME is set. If not, see troubleshooting section.
-echo $JAVA_HOME
-
-cd /path/to/moneropool/moneropool
-make
-sudo cp libmoneropool.so /usr/local/lib/
-sudo ldconfig
-```
-
-You can then launch moneropool by running the main method from your
-IDE, or on the command-line with the following commands:
+You can launch moneropool by running the main method from your IDE, or
+on the command-line with the following commands:
 
 ```bash
 # The version 0.1.0-SNAPSHOT might be different. Check it with ls.
@@ -154,28 +141,4 @@ curl localhost:8080/stats/miner/YOUR_WALLET_ADDRESS | jq
 	"estimated_hashrate": 1186,
 	"valid_shares": 18
 }
-```
-
-## 6 Troubleshooting
-
-### 6.1 `JAVA_HOME` not set
-
-`JAVA_HOME` must be set so that the C++ compiler can find the Java
-headers for the native library. This environment variable should be
-set by your distribution's Java package. If it is unset, consult
-Google.
-
-Debian administrators should use the `update-java-alternatives` tool.
-
-
-### 6.2 `java.lang.UnsatisfiedLinkError: ...`
-
-This error indicates that the native library (`libmoneropool`) could
-not be found. You can move the libraries to another directory, or you
-can expand Java's search path by setting `LD_LIBRARY_PATH`, e.g.:
-
-```bash
-export LD_LIBRARY_PATH=/usr/local/lib64
-# (continue as normal)
-java -jar ...
 ```
