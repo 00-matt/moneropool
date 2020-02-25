@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MinerHashes {
-    private String walletAddress;
+    private Integer minerId;
     private Long hashes;
 }

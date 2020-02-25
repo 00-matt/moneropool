@@ -29,9 +29,4 @@ public class PplnsApplication {
     MoneroDaemonRpcClient daemonRpcClient(@Value("${daemon.address}") URI uri) {
         return new MoneroDaemonRpcClient(uri);
     }
-
-    @Bean
-    MoneroWalletRpcClient walletRpcClient(@Value("${wallet.address}") URI uri) {
-        return new MoneroWalletRpcClient(uri);
-    }
 }

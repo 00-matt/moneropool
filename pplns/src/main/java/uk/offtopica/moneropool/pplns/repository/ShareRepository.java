@@ -21,18 +21,17 @@ public class ShareRepository {
     public List<MinerHashes> findMinerHashes(Long windowWidth, LocalDateTime before) {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery(
-                    "SELECT wallet_address, SUM(difficulty) AS hashes FROM ( " +
+                    "SELECT miner_id, SUM(difficulty) AS hashes FROM ( " +
                             "SELECT " +
-                            "  miner.wallet_address AS wallet_address, " +
+                            "  miner_id, " +
                             "  difficulty, " +
                             "  ( SELECT SUM(difficulty) FROM share WHERE id > s.id AND created_at <= :before ) AS " +
                             "total " +
                             "FROM share s " +
-                            "INNER JOIN miner ON miner.id = s.miner_id " +
                             "WHERE s.created_at <= :before" +
                             ") s1 " +
                             "WHERE s1.total < :windowWidth " +
-                            "GROUP BY wallet_address;")
+                            "GROUP BY miner_id;")
                     .addParameter("windowWidth", windowWidth)
                     .addParameter("before", before)
                     .setAutoDeriveColumnNames(true)
