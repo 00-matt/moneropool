@@ -1,6 +1,7 @@
 package uk.offtopica.moneropool.hash;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import uk.offtopica.moneropool.NewBlockTemplateEvent;
@@ -15,8 +16,8 @@ public class ResultHashValidator implements ApplicationListener<NewBlockTemplate
     private RandomXService service;
     private byte[] lastSeedHash = null;
 
-    public ResultHashValidator() {
-        service = new RandomXService(URI.create("http://127.0.0.1:6969/"));
+    public ResultHashValidator(@Value("${randomx.address}") URI uri) {
+        service = new RandomXService(uri);
     }
 
     public CompletableFuture<Boolean> validate(byte[] candidate, byte[] data) {

@@ -148,6 +148,12 @@ the stock PPLNS module.
 
 Example: `addressValidator.enabled=true`
 
+### `randomx.address`
+
+Address of a randomx-service instance. Must end with a trailing slash.
+
+Example: `http://127.0.0.1/6969/`
+
 ## api
 
 A Spring Boot application. See [the Spring Boot
